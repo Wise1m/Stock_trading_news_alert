@@ -3,15 +3,12 @@ from twilio.rest import Client
 
 STOCK = "TSLA"
 COMPANY_NAME = "Tesla Inc"
-account_sid = 'ACc0791c7a285a7207aa839809d402118f'
-auth_token = '421c46b2f56fe04a32e4a753d619611a'
 
-alphavantage_api_key = "7XDHW1SICCA4NZ68"
 alphavantage_api_endpoint = "https://www.alphavantage.co/query"
 parameters = {
     "function": "TIME_SERIES_DAILY",
     "symbol": STOCK,
-    "apikey": alphavantage_api_key,
+    "apikey": ALPHAVANTAGE_API_KEY,
 }
 
 response = requests.get(alphavantage_api_endpoint, params=parameters)
@@ -30,11 +27,10 @@ else:
     up_down = "🔻"
 
 if abs(percentage_change) >= 2:
-    newsapi_api_key = "6e80232f916c4a7d847a7df9eb4bf801"
     newsapi_api_endpoint = "https://newsapi.org/v2/everything"
     newsapi_parameters = {
         "qInTitle": COMPANY_NAME,
-        "apiKey": newsapi_api_key,
+        "apiKey": NEWSAPI_API_KEY,
     }
     news_response = requests.get(newsapi_api_endpoint, params=newsapi_parameters)
     news_response.raise_for_status()
@@ -42,7 +38,7 @@ if abs(percentage_change) >= 2:
     news = news_response.json()["articles"]
     three_articles = news[:3]
     articles = [f"{STOCK}: {up_down}{percentage_change}%\nHeadline: {article["title"]}. \nBrief: {article["description"]}" for article in three_articles]
-    client = Client(TWILIO_SID, )
+    client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
     for article in articles:
         message = client.messages.create(
                 body=articles,
